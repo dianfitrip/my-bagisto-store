@@ -795,8 +795,9 @@ return [
                     'url-path' => '',
                 ],
 
-                '42' => [
-                    'description' => '<p>Pakaian Formal</p>',
+
+                '43' => [
+                    'description' => '<p>Pakaian Muslim</p>',
                     'meta-description' => '',
                     'meta-keywords' => '',
                     'meta-title' => 'Girls Clothing',
