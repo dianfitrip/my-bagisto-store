@@ -282,7 +282,8 @@
             v-else-if="'{{ core()->getConfigData('general.design.categories.category_view') }}' !== 'sidebar'"
         >
             <div
-                class="group relative flex h-[77px] items-center border-b-4 border-transparent hover:border-b-4 hover:border-navyBlue"
+                class="group relative flex h-[77px] items-center border-b-4 border-transparent"
+                :class="getCategoryBorderClass(category.name)"
                 v-for="category in categories"
             >
                 <span>
@@ -348,7 +349,8 @@
 
                 <!-- Show only first 4 categories in main navigation -->
                 <div
-                    class="group relative flex h-[77px] items-center border-b-4 border-transparent hover:border-b-4 hover:border-navyBlue"
+                    class="group relative flex h-[77px] items-center border-b-4 border-transparent"
+                    :class="getCategoryBorderClass(category.name)"
                     v-for="category in categories.slice(0, 4)"
                 >
                     <span>
@@ -547,6 +549,33 @@
                     } catch (e) {}
 
                     this.getCategories();
+                },
+
+                getCategoryBorderClass(categoryName) {
+                    // Mapping kategori ke warna border
+                    const colorMap = {
+                        'wellness': 'hover:border-b-4 hover:border-red-500',
+                        'kids': 'hover:border-b-4 hover:border-red-500',
+                        'gelard': 'hover:border-b-4 hover:border-teal-500',
+                        'fashion': 'hover:border-b-4 hover:border-purple-500',
+                        'electronics': 'hover:border-b-4 hover:border-slate-600',
+                        'home': 'hover:border-b-4 hover:border-amber-600',
+                        'sports': 'hover:border-b-4 hover:border-red-500',
+                        'food': 'hover:border-b-4 hover:border-yellow-500',
+                        'beauty': 'hover:border-b-4 hover:border-pink-500',
+                    };
+
+                    const lowerCategoryName = categoryName.toLowerCase();
+
+                    // Cek jika nama kategori cocok dengan key di colorMap
+                    for (const [key, value] of Object.entries(colorMap)) {
+                        if (lowerCategoryName.includes(key)) {
+                            return value;
+                        }
+                    }
+
+                    // Default color jika tidak cocok
+                    return 'hover:border-b-4 hover:border-navyBlue';
                 },
 
                 getCategories() {
