@@ -282,8 +282,10 @@
             v-else-if="'{{ core()->getConfigData('general.design.categories.category_view') }}' !== 'sidebar'"
         >
             <div
-                class="group relative flex h-[77px] items-center border-b-4 border-transparent"
-                :class="getCategoryBorderClass(category.name)"
+                class="group relative flex h-[77px] items-center border-b-4"
+                style="border-color: transparent; transition: border-color 0.2s;"
+                @mouseenter="e => e.currentTarget.style.borderColor = getCategoryBorderColor(category.name)"
+                @mouseleave="e => e.currentTarget.style.borderColor = 'transparent'"
                 v-for="category in categories"
             >
                 <span>
@@ -349,8 +351,10 @@
 
                 <!-- Show only first 4 categories in main navigation -->
                 <div
-                    class="group relative flex h-[77px] items-center border-b-4 border-transparent"
-                    :class="getCategoryBorderClass(category.name)"
+                    class="group relative flex h-[77px] items-center border-b-4"
+                    style="border-color: transparent; transition: border-color 0.2s;"
+                    @mouseenter="e => e.currentTarget.style.borderColor = getCategoryBorderColor(category.name)"
+                    @mouseleave="e => e.currentTarget.style.borderColor = 'transparent'"
                     v-for="category in categories.slice(0, 4)"
                 >
                     <span>
@@ -551,33 +555,6 @@
                     this.getCategories();
                 },
 
-                getCategoryBorderClass(categoryName) {
-                    // Mapping kategori ke warna border
-                    const colorMap = {
-                        'wellness': 'hover:border-b-4 hover:border-red-500',
-                        'kids': 'hover:border-b-4 hover:border-red-500',
-                        'gelard': 'hover:border-b-4 hover:border-teal-500',
-                        'fashion': 'hover:border-b-4 hover:border-purple-500',
-                        'electronics': 'hover:border-b-4 hover:border-slate-600',
-                        'home': 'hover:border-b-4 hover:border-amber-600',
-                        'sports': 'hover:border-b-4 hover:border-red-500',
-                        'food': 'hover:border-b-4 hover:border-yellow-500',
-                        'beauty': 'hover:border-b-4 hover:border-pink-500',
-                    };
-
-                    const lowerCategoryName = categoryName.toLowerCase();
-
-                    // Cek jika nama kategori cocok dengan key di colorMap
-                    for (const [key, value] of Object.entries(colorMap)) {
-                        if (lowerCategoryName.includes(key)) {
-                            return value;
-                        }
-                    }
-
-                    // Default color jika tidak cocok
-                    return 'hover:border-b-4 hover:border-navyBlue';
-                },
-
                 getCategories() {
                     this.$axios.get("{{ route('shop.api.categories.tree') }}")
                         .then(response => {
@@ -588,6 +565,67 @@
                         .catch(error => {
                             console.log(error);
                         });
+                },
+
+                getCategoryBorderColor(categoryName) {
+                    // Mapping kategori Bahasa Indonesia ke warna hex (bukan Tailwind class)
+                    // karena Tailwind tidak bisa generate class dinamis dari JavaScript
+                    const colorMap = {
+                        // Wanita / Perempuan
+                        'wanita'     : '#ec4899', // pink-500
+                        'perempuan'  : '#ec4899',
+                        // Pria / Laki
+                        'pria'       : '#3b82f6', // blue-500
+                        'laki'       : '#3b82f6',
+                        // Anak
+                        'anak'       : '#facc15', // yellow-400
+                        // Kesehatan
+                        'kesehatan'  : '#22c55e', // green-500
+                        'sehat'      : '#22c55e',
+                        // Kecantikan
+                        'kecantikan' : '#f43f5e', // rose-500
+                        'cantik'     : '#f43f5e',
+                        // Elektronik
+                        'elektronik' : '#06b6d4', // cyan-500
+                        'gadget'     : '#06b6d4',
+                        // Rumah / Perabot
+                        'rumah'      : '#f59e0b', // amber-500
+                        'perabot'    : '#f59e0b',
+                        'furnitur'   : '#f59e0b',
+                        // Olahraga
+                        'olahraga'   : '#ef4444', // red-500
+                        'sport'      : '#ef4444',
+                        // Makanan / Minuman
+                        'makanan'    : '#f97316', // orange-500
+                        'minuman'    : '#f97316',
+                        'kuliner'    : '#f97316',
+                        // Fashion / Pakaian
+                        'fashion'    : '#a855f7', // purple-500
+                        'pakaian'    : '#a855f7',
+                        'baju'       : '#a855f7',
+                        // Tas / Sepatu / Aksesoris
+                        'tas'        : '#d946ef', // fuchsia-500
+                        'sepatu'     : '#d946ef',
+                        'aksesoris'  : '#d946ef',
+                        // Buku / Pendidikan
+                        'buku'       : '#14b8a6', // teal-500
+                        'pendidikan' : '#14b8a6',
+                        // Otomotif
+                        'otomotif'   : '#64748b', // slate-500
+                        'motor'      : '#64748b',
+                        'mobil'      : '#64748b',
+                    };
+
+                    const lowerCategoryName = categoryName.toLowerCase();
+
+                    for (const [key, value] of Object.entries(colorMap)) {
+                        if (lowerCategoryName.includes(key)) {
+                            return value;
+                        }
+                    }
+
+                    // Default color jika tidak ada yang cocok
+                    return '#6366f1'; // indigo-500
                 },
 
                 pairCategoryChildren(category) {
